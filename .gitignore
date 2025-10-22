@@ -1,0 +1,62 @@
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.iws
+*.log
+*.out
+*.tmp
+
+### Maven ###
+target/
+!src/main/resources/
+!src/test/resources/
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### IntelliJ IDEA ###
+.idea/
+*.ipr
+*.iml
+*.iws
+out/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### Logs ###
+logs/
+*.log
+spring.log
+
+### Database ###
+*.db
+*.sql
+*.mv.db
+*.h2.db
+
+### Environment files ###
+.env
+application-*.yml
+application-*.properties
+
+### Others ###
+node_modules/
+bin/
+tmp/
+dist/
