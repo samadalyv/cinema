@@ -1,7 +1,5 @@
-package com.example.demo.announcement.dto.request;
+package com.example.demo.announcement.dto.response;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +13,11 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HallDetailRequest {
+public class HallDetailResponse {
 
-    private Long hallId;
-    @FutureOrPresent(message = "Date must not be at pass time")
+    private String  hallName;
     private LocalDate showDate;
     private LocalTime startTime;
     private LocalTime endTime;
-//    @Positive(message = "Price must not be negative")
     private BigDecimal price;
-
 }

@@ -11,12 +11,15 @@ import java.time.LocalTime;
 @Repository
 public interface AnnouncementRepository extends JpaRepository<Announcement, Long> {
 
-
-    @Query("select a from  Announcement a join HallDetail hd where  hd.hall.id = ?1 and " +
-            "hd.showDate =?2 and " +
-            "hd.startTime =?3 and " +
-            "")
-
-
+    @Query("""
+                SELECT COUNT(a) > 0
+                FROM Announcement a
+                JOIN a.hallDetails hd
+                WHERE hd.hall.id = ?1
+                  AND hd.showDate = ?2
+                  AND (
+                        (?3 < hd.endTime AND ?4 > hd.startTime)
+                      )
+            """)
     boolean existsByHallIdAndOverlap(Long hallId, LocalDate showDate, LocalTime startTime, LocalTime endTime);
 }

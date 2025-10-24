@@ -1,8 +1,9 @@
 package com.example.demo.announcement.controller;
 
 import com.example.demo.announcement.dto.request.AnnouncementRequest;
-import com.example.demo.announcement.model.Announcement;
 import com.example.demo.announcement.service.AnnouncementService;
+import com.example.demo.common.SuccessMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +19,8 @@ public class AnnouncementController {
     private final AnnouncementService service;
 
     @PostMapping("/add-announcement")
-    public ResponseEntity<String> addAnnouncement(@RequestBody AnnouncementRequest request) {
+    public ResponseEntity<SuccessMessage> addAnnouncement(@Valid @RequestBody AnnouncementRequest request) {
         return ResponseEntity.ok(service.addAnnouncement(request));
-
     }
 
 

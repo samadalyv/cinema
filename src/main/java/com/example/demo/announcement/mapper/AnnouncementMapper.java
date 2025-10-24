@@ -8,7 +8,8 @@ import org.mapstruct.Mapper;
 public interface AnnouncementMapper {
 
 
-//    Announcement toAnnouncement(AnnouncementRequest request);
+//    @Mapping()
+    Announcement toAnnouncement( AnnouncementRequest request);
 
 
 }

@@ -31,6 +31,7 @@ public class HallDetail {
     @Column(name = "show_date")
     private LocalDate showDate;
 
+
     @Column(name = "start_time")
     private LocalTime startTime;
 
