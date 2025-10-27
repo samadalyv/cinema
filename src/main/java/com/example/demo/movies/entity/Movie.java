@@ -24,19 +24,6 @@ public class Movie {
     @Column(nullable = false)
     private String title;
 
-//    // todo category
-//
-//    @Column(name = "show_date")
-//    private LocalDate showDate;
-//
-//
-//    //todo
-//    @Column(name = "start_time")
-//    private LocalTime startTime;
-//
-//    @Column(name = "end_time")
-//    private LocalTime endTime;
-//
-//    @Positive(message = "price must be positive")
-//    private Double price;
+
+
 }
