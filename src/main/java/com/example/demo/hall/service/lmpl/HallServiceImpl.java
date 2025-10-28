@@ -51,7 +51,7 @@ public class HallServiceImpl implements HallService {
         return all.map(mapper::entityToResponse);
     }
 
-//todo git
+
     @Override
     public HallResponse getHallById(Long id) {
      return hallRepository.findById(id)

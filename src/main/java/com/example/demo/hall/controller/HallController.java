@@ -21,7 +21,6 @@ public class HallController {
     @GetMapping
     public ResponseEntity<Page<HallResponse>> getAllHalls(Pageable pageable) {
         Page<HallResponse> halls = hallService.getAllHalls(pageable);
-
         return ResponseEntity.ok(halls);
     }
 

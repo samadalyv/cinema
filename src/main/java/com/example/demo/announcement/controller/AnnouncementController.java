@@ -1,20 +1,19 @@
 package com.example.demo.announcement.controller;
 
 import com.example.demo.announcement.dto.request.AnnouncementRequest;
+import com.example.demo.announcement.dto.response.AnnouncementResponse;
 import com.example.demo.announcement.service.AnnouncementService;
 import com.example.demo.common.SuccessMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/announce")
 public class AnnouncementController {
+
 
     private final AnnouncementService service;
 
@@ -24,5 +23,9 @@ public class AnnouncementController {
     }
 
 
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<AnnouncementResponse> getAnnouncementById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getAnnouncementById(id));
+    }
 
 }

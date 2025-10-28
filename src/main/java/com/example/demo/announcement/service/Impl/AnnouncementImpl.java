@@ -2,6 +2,8 @@ package com.example.demo.announcement.service.Impl;
 
 import com.example.demo.announcement.dto.request.AnnouncementRequest;
 import com.example.demo.announcement.dto.request.HallDetailRequest;
+import com.example.demo.announcement.dto.response.AnnouncementResponse;
+import com.example.demo.announcement.dto.response.HallDetailResponse;
 import com.example.demo.announcement.model.Announcement;
 import com.example.demo.announcement.model.HallDetail;
 import com.example.demo.announcement.repository.AnnouncementRepository;
@@ -44,7 +46,6 @@ public class AnnouncementImpl implements AnnouncementService {
                     hallDetail.setStartTime(hallDetailRequest.getStartTime());
                     hallDetail.setEndTime(hallDetailRequest.getEndTime());
                     hallDetail.setPrice(hallDetailRequest.getPrice());
-//                    hallDetailRepository.save(hallDetail);
                return hallDetail;
                 })
                 .collect(Collectors.toSet());
@@ -52,6 +53,13 @@ public class AnnouncementImpl implements AnnouncementService {
         announcement.setHallDetails(hallDetails);
         repository.save(announcement);
         return SuccessMessage.builder().message("Successfully added announcement").status(200).build();
+    }
+
+    @Override
+    public AnnouncementResponse getAnnouncementById(Long id) {
+        var announcement = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Announcement not found"));
+      return   toResponse(announcement);
     }
 
     public void alreadyExists(HallDetailRequest request) {
@@ -64,4 +72,26 @@ public class AnnouncementImpl implements AnnouncementService {
                 throw new ResponseStatusException(HttpStatus.CONFLICT,"Hall is already booked for this time slot");
             }
     }
+
+
+    private AnnouncementResponse toResponse(Announcement announcement) {
+        AnnouncementResponse response = new AnnouncementResponse();
+        response.setMovieName(announcement.getMovie().getTitle());
+        var hallDetailResponses = announcement.getHallDetails().stream().
+                map(hallDetail -> {
+                    HallDetailResponse hallDetailResponse = new HallDetailResponse();
+                    hallDetailResponse.setHallName(hallDetail.getHall().getName());
+                    hallDetailResponse.setShowDate(hallDetail.getShowDate());
+                    hallDetailResponse.setStartTime(hallDetail.getStartTime());
+                    hallDetailResponse.setEndTime(hallDetail.getEndTime());
+                    hallDetailResponse.setPrice(hallDetail.getPrice());
+                    return hallDetailResponse;
+                })
+                .toList();
+        response.setHallDetails(hallDetailResponses);
+        return response;
+    }
+
+
+
 }
