@@ -13,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController("/movie")
+@RestController
+@RequestMapping("/movie")
 @RequiredArgsConstructor
 public class MovieController {
 
@@ -36,7 +37,6 @@ public class MovieController {
     }
 
 
-    // todo
 
     @GetMapping("/byId/{id}")
     public ResponseEntity<MovieResponse> getMovie(@PathVariable Long id) {
