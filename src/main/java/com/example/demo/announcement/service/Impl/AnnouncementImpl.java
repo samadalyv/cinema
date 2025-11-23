@@ -136,13 +136,5 @@ public class AnnouncementImpl implements AnnouncementService {
                 .build();
     }
 
-//  todo  private HallDetail toHallDetailEntity(HallDetailRequest hd) {
-//        var hallDetail = new HallDetail();
-//        hallDetail.setHall(hallService.findHallById(hd.getHallId()));
-//        hallDetail.setShowDate(hd.getShowDate());
-//        hallDetail.setStartTime(hd.getStartTime());
-//        hallDetail.setEndTime(hd.getEndTime());
-//        hallDetail.setPrice(hd.getPrice());
-//        return hallDetail;
-//    }
+
 }
