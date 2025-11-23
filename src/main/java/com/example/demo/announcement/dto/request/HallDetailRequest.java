@@ -22,7 +22,7 @@ public class HallDetailRequest {
     private LocalDate showDate;
     private LocalTime startTime;
     private LocalTime endTime;
-//    @Positive(message = "Price must not be negative")
+    @Positive(message = "Price must not be negative")
     private BigDecimal price;
 
 }

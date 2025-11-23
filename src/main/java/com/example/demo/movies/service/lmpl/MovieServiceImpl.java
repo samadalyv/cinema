@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -59,7 +61,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findMovieById(Long id) {
-        return  repository.findById(id).orElseThrow(RuntimeException::new);
+        return  repository.findById(id).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found") );
     }
 
 

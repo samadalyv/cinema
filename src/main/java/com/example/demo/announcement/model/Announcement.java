@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,10 +27,7 @@ public class  Announcement {
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
-    @JoinTable(name = "announcement_hall_details",
-            joinColumns = @JoinColumn(name = "announcement_id"),
-            inverseJoinColumns = @JoinColumn(name = "hall_detail_id"))
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<HallDetail> hallDetails;
+    @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<HallDetail> hallDetails = new HashSet<>();
 
 }

@@ -40,4 +40,8 @@ public class HallDetail {
 
     @Positive(message = "price must be positive")
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "announcement_id")
+    private Announcement announcement;
 }

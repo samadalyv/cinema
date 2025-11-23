@@ -14,6 +14,7 @@ import com.example.demo.common.SuccessMessage;
 import com.example.demo.hall.model.entity.Hall;
 import com.example.demo.hall.service.HallService;
 import com.example.demo.movies.service.MovieService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +44,7 @@ public class AnnouncementImpl implements AnnouncementService {
         var announcement = new Announcement();
         var movie = movieService.findMovieById(request.getMovieId());
         announcement.setMovie(movie);
-
+        repository.save(announcement);
         var hallDetails = request.getHallDetails().stream()
                 .map(hallDetailRequest -> {
                     alreadyExists(hallDetailRequest);
@@ -52,12 +56,12 @@ public class AnnouncementImpl implements AnnouncementService {
                     hallDetail.setStartTime(hallDetailRequest.getStartTime());
                     hallDetail.setEndTime(hallDetailRequest.getEndTime());
                     hallDetail.setPrice(hallDetailRequest.getPrice());
+                    hallDetail.setAnnouncement(announcement);
                     return hallDetail;
                 })
                 .collect(Collectors.toSet());
+
         hallDetailRepository.saveAll(hallDetails);
-        announcement.setHallDetails(hallDetails);
-        repository.save(announcement);
         return SuccessMessage.builder().message("Successfully added announcement").status(200).build();
     }
 
@@ -70,28 +74,19 @@ public class AnnouncementImpl implements AnnouncementService {
 
     @Override
     public Page<AnnouncementShortResponse> getShortAnnouncement(Pageable pageable) {
-        Page<Announcement> page = repository.findAll(pageable);
-
-        return page.map(this::toShortResponse);
+        return hallDetailRepository.findAll(pageable)
+                .map(this::toShortResponse);
     }
 
+    @Transactional
     @Override
-    public AnnouncementResponse updateAnnouncement(AnnouncementRequest request, Long id) {
-        var byId = findAnnouncementById(id);
-        hallDetailRepository.deleteAll(byId.getHallDetails());
+    public AnnouncementResponse updateAnnouncementMovie(Long id, Long movieId) {
         var announcement = findAnnouncementById(id);
-        hallDetailRepository.deleteAll(announcement.getHallDetails());
-
-        var newHallDetails = request.getHallDetails().stream()
-                .map(this::toHallDetailEntity)
-                .collect(Collectors.toSet());
-
-        hallDetailRepository.saveAll(newHallDetails);
-        announcement.setHallDetails(newHallDetails);
+        var movie = movieService.findMovieById(movieId);
+        announcement.setMovie(movie);
         repository.save(announcement);
-        log.info("Announcement updated successfully");
-
         return toResponse(announcement);
+
     }
 
     @Override
@@ -128,29 +123,26 @@ public class AnnouncementImpl implements AnnouncementService {
         return response;
     }
 
-    private AnnouncementShortResponse toShortResponse(Announcement announcement) {
+    private AnnouncementShortResponse toShortResponse(HallDetail  hallDetail) {
+        var announcement = hallDetail.getAnnouncement();// null
+        var movie = announcement.getMovie();
 
-        AnnouncementShortResponse response = new AnnouncementShortResponse();
-
-        var hallDetail = announcement.getHallDetails().stream()
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hall not found"));
-
+        String hallName = hallDetail.getHall().getName();
         return AnnouncementShortResponse.builder()
+                .movieName(movie.getTitle())
                 .id(announcement.getId())
-                .movieName(announcement.getMovie().getTitle())
-                .hallName(hallDetail.getHall().getName())
+                .hallName(hallName)
                 .price(hallDetail.getPrice())
                 .build();
     }
 
-    private HallDetail toHallDetailEntity(HallDetailRequest hd) {
-        var hallDetail = new HallDetail();
-        hallDetail.setHall(hallService.findHallById(hd.getHallId()));
-        hallDetail.setShowDate(hd.getShowDate());
-        hallDetail.setStartTime(hd.getStartTime());
-        hallDetail.setEndTime(hd.getEndTime());
-        hallDetail.setPrice(hd.getPrice());
-        return hallDetail;
-    }
+//  todo  private HallDetail toHallDetailEntity(HallDetailRequest hd) {
+//        var hallDetail = new HallDetail();
+//        hallDetail.setHall(hallService.findHallById(hd.getHallId()));
+//        hallDetail.setShowDate(hd.getShowDate());
+//        hallDetail.setStartTime(hd.getStartTime());
+//        hallDetail.setEndTime(hd.getEndTime());
+//        hallDetail.setPrice(hd.getPrice());
+//        return hallDetail;
+//    }
 }

@@ -13,6 +13,6 @@ public interface AnnouncementService {
     SuccessMessage addAnnouncement(AnnouncementRequest request);
     AnnouncementResponse getAnnouncementById(Long id);
     Page<AnnouncementShortResponse> getShortAnnouncement(Pageable pageable);
-    AnnouncementResponse updateAnnouncement(AnnouncementRequest request,Long id);
+    AnnouncementResponse updateAnnouncementMovie(Long id, Long movieId);
     Announcement findAnnouncementById(Long id);
 }

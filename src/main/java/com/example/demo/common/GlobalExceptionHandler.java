@@ -1,5 +1,6 @@
 package com.example.demo.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,16 +8,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseBody
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
@@ -38,6 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException ex) {
        var errorMessage = new  ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Internal Server Error");
+       log.error(ex.getMessage());
        return ResponseEntity.internalServerError().body(errorMessage);
     }
 
@@ -45,6 +47,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleResponseStatusException(ResponseStatusException ex) {
         int status = ex.getBody().getStatus();
         var errorMessage = new ErrorMessage(status,ex.getReason());
+        log.error("Bad request ",ex);
         return ResponseEntity.status(status).body(errorMessage);
     }
 
